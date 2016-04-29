@@ -109,12 +109,14 @@ if (!SpeechRecognition) {
     for (var i = event.resultIndex; i < event.results.length; ++i) {
       if (event.results[i].isFinal) {
         final_transcript += event.results[i][0].transcript;
+        sendAPI(); //for the automatic recognition
       } else {
         interim_transcript += event.results[i][0].transcript;
       }
     }
     final_transcript = capitalize(final_transcript);
-    final_span.innerHTML = linebreak(final_transcript);
+    //final_span.innerHTML = linebreak(final_transcript);
+    final_span.innerHTML += linebreak(final_transcript); //for the automatic recognition
     interim_span.innerHTML = linebreak(interim_transcript);
     if (final_transcript || interim_transcript) {
       showButtons('inline-block');
@@ -165,6 +167,7 @@ function sendAPI() {
                 }
                 $('#log').prepend('<span>' + reply.body.sentimentArray[i].sentence + ' [' + reply.body.sentimentArray[i].sentiment + ' on a scale of 0→4]' + '</span><br>');
                 $('#log').prepend('<h3 class="mdl-card__title-text mdl-color-text--'+sentimentColor[reply.body.sentimentArray[i].sentiment]+'">' + 'Your sentiment is ' + sentimentText[reply.body.sentimentArray[i].sentiment] + '</h3>');
+                final_transcript = ''; //for the automatic recognition
               }
             }
           } else {
@@ -195,6 +198,7 @@ function apiButton() {
     recognizing = false;
     recognition.stop();
   } else {
+    final_transcript = final_span.innerHTML; //for the automatic recognition
     sendAPI();
   }
   api_button.style.display = 'none';
