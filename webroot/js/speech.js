@@ -146,7 +146,7 @@ function sendAPI() {
     n = 40 + final_transcript.substring(40).indexOf(' ');
   }
   var textURI = encodeURI(final_transcript);
-  var JSONtext = {"message":final_transcript,"from":"js"}
+  var JSONtext = {"message":final_transcript,"activity":final_activity,"from":"js"}
 
   //eb.publish('events', {"message":final_transcript,"from":"js"});
   eb.send('events', JSONtext, function(err, reply) {
@@ -247,3 +247,14 @@ function showButtons(style) {
   copy_info.style.display = 'none';
   api_info.style.display = 'none';
 }
+
+////////////////////////////////////
+activity_span.innerHTML = "Restauration";
+final_activity = activity_span.innerHTML;
+
+$('ul.mdl-menu li').click(function(e)
+{
+  activity_span.innerHTML = $(this).html();
+  final_activity = activity_span.innerHTML;
+  //console.log($(this).html());
+ });

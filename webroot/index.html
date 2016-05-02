@@ -57,11 +57,26 @@
     <div class="mdl-layout__tab-panel is-active" id="overview">
 
       <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn1">
+          <i class="material-icons">more_vert</i>
+        </button>
+        <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right" for="btn1">
+          <li class="mdl-menu__item">Restauration</li>
+          <li class="mdl-menu__item">Theme Park</li>
+          <li class="mdl-menu__item">Travelling</li>
+          <li class="mdl-menu__item">Leisure</li>
+          <li class="mdl-menu__item">Accommodation</li>
+        </ul>
+
         <div class="mdl-card mdl-cell mdl-cell--12-col">
           <div class="mdl-card__supporting-text">
             <h4>Web Speech API Demonstration</h4>
 
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select">
+            <h6>Current activity</h6>
+            <span id="activity_span" class="final"></span>
+
+            <!--div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select">
               <input class="mdl-textfield__input" value="Restauration" type="text" id="activity" readonly tabIndex="-1" />
               <label class="mdl-textfield__label" for="activity">Current activity</label>
               <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu" for="activity">
@@ -71,7 +86,7 @@
                 <li class="mdl-menu__item">Leisure</li>
                 <li class="mdl-menu__item">Accommodation</li>
               </ul>
-            </div>
+            </div-->
 
             <div id="info">
               <p id="info_start">Click on the microphone icon and begin speaking.</p>
