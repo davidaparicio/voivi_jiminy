@@ -26,7 +26,7 @@ public class WorkerVerticle extends AbstractVerticle {
         logger.info("[WorkerVerticle] Started in " + Thread.currentThread().getName());
 
         vertx.eventBus()
-                .consumer("events",
+                .consumer("worker",
                         m -> {
                             Date today = Calendar.getInstance().getTime();
                             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy-hh:mm:ss");
@@ -37,7 +37,7 @@ public class WorkerVerticle extends AbstractVerticle {
                             JsonArray subjectArray   = nlp.findSubject(message);
                             JsonArray sentimentArray = nlp.findSentiment(message);
 
-                            logger.info("[WorkerVerticle] Receiving:" + message);
+                            logger.info("[WorkerVerticle] Receiving:" + message + " [" + Thread.currentThread().getName() + "]");
                             m.reply(new JsonObject()
                                     .put("message", message)
                                     .put("timestamp", timestamp)
