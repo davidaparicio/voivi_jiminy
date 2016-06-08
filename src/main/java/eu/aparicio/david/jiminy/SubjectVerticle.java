@@ -5,25 +5,20 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.logging.Logger;
 
 public class SubjectVerticle extends AbstractVerticle {
     private static Logger logger = Logger.getAnonymousLogger();
-    private static NLP nlp = new NLP();
     EventBus eventBus;
 
     @Override
     public void start() throws Exception {
 
         logger.info("[SubjectVerticle] Starting in " + Thread.currentThread().getName());
-
-        java.util.Date date= new java.util.Date();
-        nlp.init();
-
         logger.info("[SubjectVerticle] Started in " + Thread.currentThread().getName());
+
+        Subject subject = new Subject();
+        subject.init();
 
         vertx.eventBus()
                 .consumer("subject",
@@ -34,7 +29,7 @@ public class SubjectVerticle extends AbstractVerticle {
 
                             JsonObject json = (JsonObject) m.body();
                             String message = json.getString("message");
-                            JsonArray subjectArray   = nlp.findSubject(message);
+                            JsonArray subjectArray = subject.findSubject(message);
                             //JsonArray sentimentArray = nlp.findSentiment(message);
 
                             logger.info("[SubjectVerticle] Receiving:" + message + " [" + Thread.currentThread().getName() + "]");

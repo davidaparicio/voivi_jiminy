@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 
 public class WorkerVerticle extends AbstractVerticle {
     private static Logger logger = Logger.getAnonymousLogger();
-    private static NLP nlp = new NLP();
     EventBus eventBus;
 
     @Override
@@ -23,7 +22,6 @@ public class WorkerVerticle extends AbstractVerticle {
         logger.info("[WorkerVerticle] Starting in " + Thread.currentThread().getName());
 
         java.util.Date date= new java.util.Date();
-        nlp.init();
 
         logger.info("[WorkerVerticle] Started in " + Thread.currentThread().getName());
 

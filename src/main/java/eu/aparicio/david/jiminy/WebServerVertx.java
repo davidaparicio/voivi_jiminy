@@ -31,9 +31,7 @@ public class WebServerVertx {
         SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
         BridgeOptions options = new BridgeOptions()
                 .addInboundPermitted(new PermittedOptions().setAddress("events"))
-                .addInboundPermitted(new PermittedOptions().setAddress("worker"))
-                .addOutboundPermitted(new PermittedOptions().setAddress("events"))
-                .addOutboundPermitted(new PermittedOptions().setAddress("worker"));
+                .addOutboundPermitted(new PermittedOptions().setAddress("events"));
         sockJSHandler.bridge(options);
 
         router.route("/eventbus/*").handler(sockJSHandler);

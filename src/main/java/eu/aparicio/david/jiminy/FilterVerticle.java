@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 public class FilterVerticle extends AbstractVerticle {
     private static Logger logger = Logger.getAnonymousLogger();
-    private static NLP nlp = new NLP();
     EventBus eventBus;
 
     @Override

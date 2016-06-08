@@ -29,22 +29,18 @@ import java.util.Map;
 import java.util.Properties;
 
 public class Subject {
-    private static Logger logger = LoggerFactory.getLogger(NLP.class);
-    private static StanfordCoreNLP pipeline = new StanfordCoreNLP("NLP");
-    private static String[] sentimentText = {"Very Negative","Negative", "Neutral", "Positive", "Very Positive"};
-    public static int mainSentiment = -1;
+    private Logger logger = LoggerFactory.getLogger(Subject.class);
+    private StanfordCoreNLP pipeline;
 
-    public static void init() {
-        pipeline = new StanfordCoreNLP("NLP"); //read the properties file
-    }
-
-    public static JsonArray findSubject(String paragraph) {
-        JsonArray subjectArray = new JsonArray();
-        //RelationTriple triple = null;
-
+    public void init() {
         // Create the Stanford CoreNLP pipeline
         Properties props = PropertiesUtils.asProperties("annotators", "tokenize,ssplit,pos,lemma,depparse,natlog,openie");
-        StanfordCoreNLP pipeline = new StanfordCoreNLP(props); //process the pipeline
+        pipeline = new StanfordCoreNLP(props); //process the pipeline
+    }
+
+    public JsonArray findSubject(String paragraph) {
+        JsonArray subjectArray = new JsonArray();
+        //RelationTriple triple = null;
 
         // Annotate an example document.
         Annotation doc = new Annotation(paragraph);
@@ -78,32 +74,5 @@ public class Subject {
         }
 
         return subjectArray;
-    }
-
-    public static JsonArray findSentiment(String paragraph) {
-        JsonArray sentimentArray = new JsonArray();
-
-        mainSentiment = 0;
-        if (paragraph != null && paragraph.length() > 0) {
-            int longest = 0;
-            Annotation annotation = pipeline.process(paragraph);
-            int sentenceNo = 0;
-            for (CoreMap sentence : annotation.get(CoreAnnotations.SentencesAnnotation.class)) {
-                Tree tree = sentence.get(SentimentCoreAnnotations.SentimentAnnotatedTree.class);
-                String partText = sentence.toString();
-                int sentiment = RNNCoreAnnotations.getPredictedClass(tree);
-                sentimentArray.add(new JsonObject()
-                        .put("sentenceNo", sentenceNo)
-                        .put("sentence", partText)
-                        .put("sentiment", sentiment));
-                System.out.println("PartText: "+partText);
-                System.out.println("Sentiment: "+sentiment);
-                if (partText.length() > longest) {
-                    mainSentiment = sentiment;
-                    longest = partText.length();
-                }
-            }
-        }
-        return sentimentArray;
     }
 }

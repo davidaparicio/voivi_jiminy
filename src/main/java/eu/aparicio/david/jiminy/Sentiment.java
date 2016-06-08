@@ -29,58 +29,20 @@ import java.util.Map;
 import java.util.Properties;
 
 public class Sentiment {
-    private static Logger logger = LoggerFactory.getLogger(NLP.class);
-    private static StanfordCoreNLP pipeline = new StanfordCoreNLP("NLP");
-    private static String[] sentimentText = {"Very Negative","Negative", "Neutral", "Positive", "Very Positive"};
-    public static int mainSentiment = -1;
+    private Logger logger = LoggerFactory.getLogger(Sentiment.class);
+    private StanfordCoreNLP pipeline;
 
-    public static void init() {
-        pipeline = new StanfordCoreNLP("NLP"); //read the properties file
-    }
+    private String[] sentimentText = {"Very Negative","Negative", "Neutral", "Positive", "Very Positive"};
+    public int mainSentiment = -1;
 
-    public static JsonArray findSubject(String paragraph) {
-        JsonArray subjectArray = new JsonArray();
-        //RelationTriple triple = null;
-
+    public void init() {
         // Create the Stanford CoreNLP pipeline
-        Properties props = PropertiesUtils.asProperties("annotators", "tokenize,ssplit,pos,lemma,depparse,natlog,openie");
-        StanfordCoreNLP pipeline = new StanfordCoreNLP(props); //process the pipeline
-
-        // Annotate an example document.
-        Annotation doc = new Annotation(paragraph);
-        pipeline.annotate(doc);
-
-        // Loop over sentences in the document
-        int sentenceNo = 0;
-        for (CoreMap sentence : doc.get(CoreAnnotations.SentencesAnnotation.class)) {
-            System.out.println("Sentence #" + ++sentenceNo + ": " + sentence.get(CoreAnnotations.TextAnnotation.class));
-            // Get the OpenIE triples for the sentence
-            Collection<RelationTriple> triples = sentence.get(NaturalLogicAnnotations.RelationTriplesAnnotation.class);
-            // Print the triples
-            if (triples != null && triples.size()>0) {
-                RelationTriple triple = triples.iterator().next();
-                subjectArray.add(new JsonObject()
-                        .put("sentenceNo", sentenceNo)
-                        .put("subject", triple.subjectLemmaGloss())
-                        .put("relation", triple.relationLemmaGloss())
-                        .put("object", triple.objectLemmaGloss()));
-                System.out.println("(" +
-                        triple.subjectLemmaGloss() + "," +
-                        triple.relationLemmaGloss() + "," +
-                        triple.objectLemmaGloss() + ")");
-            } else {
-                subjectArray.add(new JsonObject()
-                        .put("sentenceNo", sentenceNo)
-                        .put("subject", "")
-                        .put("relation", "")
-                        .put("object", ""));
-            }
-        }
-
-        return subjectArray;
+        Properties props = PropertiesUtils.asProperties("annotators", "tokenize, ssplit, parse, sentiment");
+        pipeline = new StanfordCoreNLP(props); //process the pipeline
     }
 
-    public static JsonArray findSentiment(String paragraph) {
+    public JsonArray findSentiment(String paragraph) {
+
         JsonArray sentimentArray = new JsonArray();
 
         mainSentiment = 0;
