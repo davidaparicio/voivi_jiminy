@@ -23,7 +23,7 @@ public class WorkerVertx {
             vertx.deployVerticle(
                     WorkerVerticle.class.getName(),
                     new DeploymentOptions()
-                            .setInstances(2)
+                            .setInstances(1)
                             //.setHa(true)
                             .setWorker(true));
             logger.info("[WorkerVertx] Started in " + Thread.currentThread().getName());
