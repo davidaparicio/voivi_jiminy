@@ -38,6 +38,13 @@
             <version>${vertx.version}</version>
         </dependency>
 
+        <!-- Nimbus Jose Crypto RFC7516 -->
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>4.15</version>
+        </dependency>
+
         <!-- Stanford Dependencies -->
         <dependency>
             <groupId>edu.stanford.nlp</groupId>
