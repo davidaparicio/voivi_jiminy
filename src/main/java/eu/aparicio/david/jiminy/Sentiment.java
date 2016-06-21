@@ -51,14 +51,15 @@ public class Sentiment {
             Annotation annotation = pipeline.process(paragraph);
             int sentenceNo = 0;
             for (CoreMap sentence : annotation.get(CoreAnnotations.SentencesAnnotation.class)) {
+                sentenceNo++;
                 Tree tree = sentence.get(SentimentCoreAnnotations.SentimentAnnotatedTree.class);
                 String partText = sentence.toString();
                 int sentiment = RNNCoreAnnotations.getPredictedClass(tree);
+                System.out.println("Sentence #" + sentenceNo + ": " + partText);
                 sentimentArray.add(new JsonObject()
                         .put("sentenceNo", sentenceNo)
                         .put("sentence", partText)
                         .put("sentiment", sentiment));
-                System.out.println("PartText: "+partText);
                 System.out.println("Sentiment: "+sentiment);
                 if (partText.length() > longest) {
                     mainSentiment = sentiment;
