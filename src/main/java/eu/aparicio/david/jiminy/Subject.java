@@ -49,7 +49,8 @@ public class Subject {
         // Loop over sentences in the document
         int sentenceNo = 0;
         for (CoreMap sentence : doc.get(CoreAnnotations.SentencesAnnotation.class)) {
-            System.out.println("Sentence #" + ++sentenceNo + ": " + sentence.get(CoreAnnotations.TextAnnotation.class));
+            sentenceNo++;
+            System.out.println("Sentence #" + sentenceNo + ": " + sentence.get(CoreAnnotations.TextAnnotation.class));
             // Get the OpenIE triples for the sentence
             Collection<RelationTriple> triples = sentence.get(NaturalLogicAnnotations.RelationTriplesAnnotation.class);
             // Print the triples

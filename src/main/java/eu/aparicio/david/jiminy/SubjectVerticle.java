@@ -5,7 +5,12 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
+import java.text.ParseException;
 import java.util.logging.Logger;
+
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.*;
+import java.security.SecureRandom;
 
 public class SubjectVerticle extends AbstractVerticle {
     private static Logger logger = Logger.getAnonymousLogger();
@@ -20,6 +25,9 @@ public class SubjectVerticle extends AbstractVerticle {
         Subject subject = new Subject();
         subject.init();
 
+        // The shared key
+        byte[] key128 = { (byte)177, (byte)119, (byte) 33, (byte) 13, (byte)164, (byte) 30, (byte)108, (byte)121, (byte)207, (byte)136, (byte)107, (byte)242, (byte) 12, (byte)224, (byte) 19, (byte)226 };
+
         vertx.eventBus()
                 .consumer("subject",
                         m -> {
@@ -28,7 +36,25 @@ public class SubjectVerticle extends AbstractVerticle {
                             //String timestamp = formatter.format(today);
 
                             JsonObject json = (JsonObject) m.body();
-                            String message = json.getString("message");
+
+                            String jweString = ((JsonObject) m.body()).getString("message");
+                            // Parse into JWE object again...
+                            JWEObject jweObject = null;
+                            try {
+                                jweObject = JWEObject.parse(jweString);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            // Decrypt
+                            try {
+                                jweObject.decrypt(new DirectDecrypter(key128));
+                            } catch (JOSEException e) {
+                                e.printStackTrace();
+                            }
+                            // Get the plain text
+                            Payload payload = jweObject.getPayload();
+                            String message = payload.toString();
+
                             JsonArray subjectArray = subject.findSubject(message);
                             //JsonArray sentimentArray = nlp.findSentiment(message);
 

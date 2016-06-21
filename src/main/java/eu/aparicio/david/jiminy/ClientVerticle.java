@@ -10,6 +10,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Logger;
 
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.*;
+import java.security.SecureRandom;
+
 public class ClientVerticle extends AbstractVerticle {
     private static Logger logger = Logger.getAnonymousLogger();
     EventBus eventBus;
@@ -43,6 +47,11 @@ public class ClientVerticle extends AbstractVerticle {
         Speech[19] = "For the past seven years, our goal has been a growing economy that works better for everybody. We've made progress. But we need to make more. And despite all the political arguments we've had these past few years, there are some areas where Americans broadly agree.";
         final Integer[] id = {0};
 
+        //byte[] sharedKey = new byte[32]; new SecureRandom().nextBytes(sharedKey);
+        // The shared key
+        byte[] key128 = { (byte)177, (byte)119, (byte) 33, (byte) 13, (byte)164, (byte) 30, (byte)108, (byte)121, (byte)207, (byte)136, (byte)107, (byte)242, (byte) 12, (byte)224, (byte) 19, (byte)226 };
+        // Create the header
+        JWEHeader header = new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A128GCM);
 
         logger.info("[ClientVerticle] Started in " + Thread.currentThread().getName());
 
@@ -57,15 +66,25 @@ public class ClientVerticle extends AbstractVerticle {
                     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy-hh:mm:ss");
                     String timestamp = formatter.format(today);
 
+                    // Set the plain text
+                    Payload payload = new Payload(Speech[id[0]++]);
+                    // Create the JWE object and encrypt it
+                    JWEObject jweObject = new JWEObject(header, payload);
+                    try {
+                        jweObject.encrypt(new DirectEncrypter(key128));
+                    } catch (JOSEException e) {
+                        e.printStackTrace();
+                    }
+                    // Serialise to compact JOSE form...
+                    String jweString = jweObject.serialize();
+
                     vertx.eventBus().send("events",
                             new JsonObject()
-                                    .put("message", Speech[id[0]++])
+                                    .put("message", jweString)
                                     .put("from", "ClientVerticle")
                             , reply -> {
                                 if (reply.succeeded()) {
                                     Date today2 = Calendar.getInstance().getTime();
-                                    SimpleDateFormat formatter2 = new SimpleDateFormat("dd/MM/yyyy-hh:mm:ss");
-                                    String timestamp2 = formatter.format(today);
                                     long diff = today2.getTime() - today.getTime();
                                     System.out.println(diff);
                                     //logger.info("[ClientVerticle] Received:\n" + reply.result().body() + " \n[" + Thread.currentThread().getName() + "]\nDone in: " + diff + " ms\n---------------------------------------------------------------------------------------");
