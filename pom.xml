@@ -11,7 +11,7 @@
     <properties>
         <!-- the main verticle class name -->
         <main.verticle>eu.aparicio.david.jiminy.MainVerticle</main.verticle>
-        <vertx.version>3.2.1</vertx.version>
+        <vertx.version>3.3.2</vertx.version>
         <StNLP.version>3.6.0</StNLP.version>
         <slf4j.version>1.7.21</slf4j.version>
         <mvncp.version>3.5.1</mvncp.version>

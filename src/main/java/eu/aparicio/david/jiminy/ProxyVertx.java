@@ -23,9 +23,9 @@ public class ProxyVertx {
             vertx.deployVerticle(
                     ProxyVerticle.class.getName(),
                     new DeploymentOptions()
-                            .setInstances(1)
+                            .setInstances(1));
                             //.setHa(true)
-                            .setWorker(true));
+                            //.setWorker(true))
             logger.info("[ProxyVertx] Started in " + Thread.currentThread().getName());
         });
     }

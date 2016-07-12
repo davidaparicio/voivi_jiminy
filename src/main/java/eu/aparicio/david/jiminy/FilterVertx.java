@@ -23,9 +23,9 @@ public class FilterVertx {
             vertx.deployVerticle(
                     FilterVerticle.class.getName(),
                     new DeploymentOptions()
-                            .setInstances(1)
+                            .setInstances(1));
                             //.setHa(true)
-                            .setWorker(true));
+                            //.setWorker(true));
             logger.info("[FilterVertx] Started in " + Thread.currentThread().getName());
         });
     }
