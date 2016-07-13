@@ -13,20 +13,20 @@ import java.util.Calendar;
 
 import java.util.logging.Logger;
 
-public class FilterVertx {
+public class ProxyVertx {
     private static Logger logger = Logger.getAnonymousLogger();
 
     public static void main(String[] args) {
         Vertx.clusteredVertx(new VertxOptions(), ar -> {
             Vertx vertx = ar.result();
-            logger.info("[FilterVertx] Starting in " + Thread.currentThread().getName());
+            logger.info("[ProxyVertx] Starting in " + Thread.currentThread().getName());
             vertx.deployVerticle(
-                    FilterVerticle.class.getName(),
+                    ProxyVerticle.class.getName(),
                     new DeploymentOptions()
                             .setInstances(1));
                             //.setHa(true)
-                            //.setWorker(true));
-            logger.info("[FilterVertx] Started in " + Thread.currentThread().getName());
+                            //.setWorker(true))
+            logger.info("[ProxyVertx] Started in " + Thread.currentThread().getName());
         });
     }
 }

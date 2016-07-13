@@ -13,20 +13,20 @@ import java.util.Calendar;
 
 import java.util.logging.Logger;
 
-public class FilterVertx {
+public class SentimentVertx {
     private static Logger logger = Logger.getAnonymousLogger();
 
     public static void main(String[] args) {
         Vertx.clusteredVertx(new VertxOptions(), ar -> {
             Vertx vertx = ar.result();
-            logger.info("[FilterVertx] Starting in " + Thread.currentThread().getName());
+            logger.info("[SentimentVertx] Starting in " + Thread.currentThread().getName());
             vertx.deployVerticle(
-                    FilterVerticle.class.getName(),
+                    SentimentVerticle.class.getName(),
                     new DeploymentOptions()
-                            .setInstances(1));
+                            .setInstances(2)
                             //.setHa(true)
-                            //.setWorker(true));
-            logger.info("[FilterVertx] Started in " + Thread.currentThread().getName());
+                            .setWorker(true));
+            logger.info("[SentimentVertx] Started in " + Thread.currentThread().getName());
         });
     }
 }

@@ -10,23 +10,23 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Logger;
 
-public class FilterVerticle extends AbstractVerticle {
+public class LoadVerticle extends AbstractVerticle {
     private static Logger logger = Logger.getAnonymousLogger();
     EventBus eventBus;
 
     @Override
     public void start() throws Exception {
 
-        logger.info("[FilterVerticle] Starting in " + Thread.currentThread().getName());
-        logger.info("[FilterVerticle] Started in " + Thread.currentThread().getName());
+        logger.info("[LoadVerticle] Starting in " + Thread.currentThread().getName());
+        logger.info("[LoadVerticle] Started in " + Thread.currentThread().getName());
 
         vertx.eventBus()
-                .consumer("events",
+                .consumer("load",
                         m -> {
-                            logger.info("[FilterVerticle] Forwarding:" + ((JsonObject) m.body()).getString("message") + " [" + Thread.currentThread().getName() + "]");
-                            vertx.eventBus().send("proxy", m.body(), ar -> {
+                            logger.info("[LoadVerticle] Forwarding:" + ((JsonObject) m.body()).getString("message") + " [" + Thread.currentThread().getName() + "]");
+                            vertx.eventBus().send("worker", m.body(), ar -> {
                                 if (ar.succeeded()) {
-                                    logger.info("[FilterVerticle] Received:" + ar.result().body() + " [" + Thread.currentThread().getName() + "]");
+                                    logger.info("[LoadVerticle] Received:" + ar.result().body() + " [" + Thread.currentThread().getName() + "]");
                                     m.reply(ar.result().body());
                                 }
                             });
